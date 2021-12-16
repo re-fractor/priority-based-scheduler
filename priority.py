@@ -9,6 +9,7 @@ class Proc(NamedTuple):
 class CompletedProc(NamedTuple):
     proc_id: int
     completion_time: int
+    priority : int
 
 n = int(input("Enter total number of processes:"))
 procs: List[Proc] = []
@@ -28,15 +29,16 @@ for i in range(n):
         if proc.arrival_time<=etime:
                 ready.append(proc)
 
-    ready.sort(key= lambda x: x.priority)
-    processing_proc = ready.findFirst()
+    ready.sort(key= lambda x: (x.priority))
+    processing_proc = ready[0]
     #print(processing_proc)
     if processing_proc.arrival_time<=etime: 
         etime = etime + processing_proc.burst_time
     else:
         etime  = processing_proc.arrival_time
     
-    completed_procs.append(CompletedProc(processing_proc.proc_id,etime))
-    break
+    completed_procs.append(CompletedProc(processing_proc.proc_id,etime,processing_proc.priority))
+    procs.remove(processing_proc)
+
 for proc in completed_procs:
     print("\t", proc)
